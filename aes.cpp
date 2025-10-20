@@ -10,7 +10,7 @@ void banner() {
          << R"(
              _    _____ ____        _ ____  ___  
             / \  | ____/ ___|      / |___ \( _ ) 
-           / _ \ |  _| \___ \ _____| | __) / _ \ 
+           / _ \ |  _| \___ \ _____| | __) / _ \
           / ___ \| |___ ___) |_____| |/ __/ (_) |
          /_/   \_\_____|____/      |_|_____\___/ 
         )"
@@ -29,7 +29,7 @@ void header() {
 
 void help() {
     cout << "\033[1;33mUsage:\033[0m\n"
-         << "  ./aes -e <string_to_encrypt>    Encrypt input string\n";
+         << "  ./aes -e <key> <message> \n";
 }
 
 const vector<unsigned char> s_box = {
@@ -245,13 +245,37 @@ string get_hex_string(const vector<vector<unsigned char>>& state) {
     return ss.str();
 }
 
-int main() { 
-    string message = "If you want your son high level wrestling, send him 2-3 years Georgia and forget!"; 
-    string key = "CHAMA O NAO CHAMA?!";
+int main(int argc, char* argv[]) { 
+    // string message = "applied cryptography"; 
+    // string key = "somerandomkeystring";
+
+    if(argc < 2) {
+        help();
+
+        return 1;
+    }
+
+    banner();
+    header();
+
+    
+    string option = argv[1];
+    string key;
+    string message;
+    
+    if(option == "-e") {
+        key = argv[2];
+        message = argv[3];
+    }
+    else {
+        help();
+        return 1;
+    }
 
     cout << "Key in Hex: ";
     key = key_check(&key);
 
+    cout << "Key after operation: " << key << endl;
     print_hex(key);
 
     string padded_message = message_padding(message);
@@ -285,6 +309,5 @@ int main() {
     cout << "========================\n";
     cout << aes_str << endl;
 
-    banner();
     return 0; 
 }
